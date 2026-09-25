@@ -1,21 +1,16 @@
 # EQLTY Desk
 
-A Desk for [PerkOS Runtime](https://github.com/PerkOS-xyz/PerkOS-Runtime): tokenized stocks on Robinhood Chain.
+A Desk for [PerkOS Runtime](https://github.com/PerkOS-xyz/PerkOS-Runtime), on Robinhood Chain. It continues [PerkOS-EQLTY](https://github.com/PerkOS-xyz/PerkOS-EQLTY) and the craft of [PerkOS-Floor](https://github.com/PerkOS-xyz/PerkOS-Floor): the desk drafts, you approve, your wallet signs.
 
-It comes from [PerkOS-EQLTY](https://github.com/PerkOS-xyz/PerkOS-EQLTY), which brought the market and the four seats, and from [PerkOS-Floor](https://github.com/PerkOS-xyz/PerkOS-Floor), which brought the craft: the desk drafts, you hold to approve, your wallet signs.
+It holds no keys and signs nothing.
 
-This repository is the desk itself: what it can trade, what it is worth, and the order it would write. It holds no keys and signs nothing.
-
-## The contract
-
-A Desk answers what Runtime asks of any desk:
+## What it answers
 
 ```
 GET /market            what can be traded, priced
 GET /series?tickers=   price history for the facts a turn cites
+GET /health            which contract version it speaks
 ```
-
-`src/contract.ts` mirrors `@perkos/desk-contract` version 1. PerkOS validates every answer against it before a screen draws it.
 
 ## Development
 
