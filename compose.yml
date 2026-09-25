@@ -1,0 +1,19 @@
+# The desk on the PerkOS host. It is not published to the internet: PerkOS
+# reaches it by container name on the shared network and proxies the answer,
+# so the only thing that ever talks to it is the API.
+services:
+  desk:
+    build: .
+    image: perkos-eqlty-desk
+    container_name: perkos-eqlty-desk
+    restart: unless-stopped
+    environment:
+      EQLTY_API_URL: ${EQLTY_API_URL:-https://eqlty-api.perkos.xyz}
+      PORT: "8090"
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: ${PERKOS_DESK_NETWORK:-perkos-knowledge_default}
