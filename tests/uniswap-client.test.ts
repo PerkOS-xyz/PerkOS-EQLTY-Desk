@@ -58,6 +58,7 @@ describe("Uniswap quotes", () => {
       slippageTolerance: 1,
       routingPreference: "BEST_PRICE",
       protocols: ["V4"],
+      hooksOptions: "V4_NO_HOOKS",
       permitAmount: "EXACT",
     });
   });

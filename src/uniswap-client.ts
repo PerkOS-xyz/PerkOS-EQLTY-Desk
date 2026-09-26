@@ -31,6 +31,13 @@ const MAX_ATTEMPTS = 3;
 const TIMEOUT_MS = 12_000;
 /** The protocols every quote request asks the Trading API for. */
 export const quoteProtocols = ["V4"] as const;
+/**
+ * Only pools without a hook. The owner's delegated wallet signs under a rule
+ * that lists every contract a buy may touch, and a hook is a contract it does
+ * not list, so a route through a hooked pool would be refused at signing. On
+ * 2026-09-26 this cost AAPL 0.27% and AMD 0.04% of the output, and AMZN nothing.
+ */
+export const quoteHooks = "V4_NO_HOOKS";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -221,6 +228,7 @@ export class UniswapClient {
           slippageTolerance: input.slippageTolerance,
           routingPreference: "BEST_PRICE",
           protocols: quoteProtocols,
+          hooksOptions: quoteHooks,
           permitAmount: "EXACT",
         }),
         signal: AbortSignal.timeout(TIMEOUT_MS),
