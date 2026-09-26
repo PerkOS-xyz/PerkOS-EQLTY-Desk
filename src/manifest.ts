@@ -21,12 +21,12 @@ export const MANIFEST: DeskManifest = {
     { text: "What can I trade on this desk?", tag: "Tokenized stocks in USDG" },
     { text: "Is Apple cheaper than Microsoft right now?", tag: "Compare two stocks" },
   ],
-  screens: ["market"],
+  screens: ["market", "trader"],
   rules: [
     "This desk trades tokenized stocks on Robinhood Chain, priced in USDG.",
     "They trade 24/7 onchain; only the reference price pauses outside US market hours, so never say the market is closed: say the reference is frozen and compare with the last close.",
     "An order is at most 100 USDG.",
-    "Nobody on the desk spends, signs or moves funds: the desk drafts and the person approves.",
+    "Nobody on the desk moves funds on their own: the desk drafts, the person holds to approve, and only then the Trader sends the order from the wallet the person delegated, inside the rails they set.",
     "Answer from the facts you are given and tag each claim with the fact it rests on, like [F2]. If something is missing, say so in one line and continue.",
   ].join(" "),
   turns: {
