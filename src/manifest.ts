@@ -9,6 +9,10 @@
  *
  * Orders are not a kind of turn here yet: they arrive with the drafts, and a
  * desk that cannot draft should not ask its Risk for a verdict on one.
+ *
+ * Each starter says which turn it runs, so a tap never has to be guessed at;
+ * one without a turn is plain chat. The order ceiling and the venues are
+ * numbers and names Runtime can check an answer against, not only prose.
  */
 
 import type { DeskManifest } from "./contract.ts";
@@ -16,12 +20,17 @@ import type { DeskManifest } from "./contract.ts";
 export const MANIFEST: DeskManifest = {
   tagline: "Tokenized stocks on Robinhood Chain",
   starters: [
-    { text: "What should I buy this month?", tag: "The desk reads the market" },
-    { text: "How is NVDA doing today?", tag: "Price and recent range" },
+    { text: "What should I buy this month?", tag: "The desk reads the market", turn: "advise" },
+    { text: "How is NVDA doing today?", tag: "Price and recent range", turn: "analyze" },
+    // No turn: Sparky answers this one alone, and the team stays asleep.
     { text: "What can I trade on this desk?", tag: "Tokenized stocks in USDG" },
-    { text: "Is Apple cheaper than Microsoft right now?", tag: "Compare two stocks" },
+    { text: "Is Apple cheaper than Microsoft right now?", tag: "Compare two stocks", turn: "analyze" },
   ],
-  screens: ["market", "trader"],
+  screens: ["market", "trader", "history"],
+  // The same ceiling the rules state in words and /swap enforces by default.
+  maxOrder: 100,
+  // Where this desk routes an order, so an answer that names a venue can be checked.
+  venues: ["Uniswap on Robinhood Chain"],
   rules: [
     "This desk trades tokenized stocks on Robinhood Chain, priced in USDG.",
     "They trade 24/7 onchain; only the reference price pauses outside US market hours, so never say the market is closed: say the reference is frozen and compare with the last close.",
