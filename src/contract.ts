@@ -95,3 +95,10 @@ export interface DeskManifest {
    */
   venues?: string[];
 }
+
+/** Versioned separately from the market manifest so older clients remain compatible. */
+export interface DeskIdentityDescriptor {
+  version: "1";
+  deskId: string;
+  seats: Array<{ id: string; label: string; context: string; writes: string | null }>;
+}
