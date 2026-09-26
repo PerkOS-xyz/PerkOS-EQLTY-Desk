@@ -74,7 +74,7 @@ export interface DeskRolePrompts {
 export interface DeskManifest {
   tagline: string;
   starters: DeskStarter[];
-  screens: Array<"market" | "portfolio" | "history">;
+  screens: Array<"market" | "portfolio" | "history" | "trader">;
   /** What every member of the team keeps in every turn on this desk. */
   rules: string;
   /** A kind of turn left out is one this desk does not run. */
