@@ -26,7 +26,7 @@ export const MANIFEST: DeskManifest = {
     { text: "What can I trade on this desk?", tag: "Tokenized stocks in USDG" },
     { text: "Is Apple cheaper than Microsoft right now?", tag: "Compare two stocks", turn: "analyze" },
   ],
-  screens: ["market", "trader", "history"],
+  screens: ["market", "trader", "history", "portfolio"],
   // The same ceiling the rules state in words and /swap enforces by default.
   maxOrder: 100,
   // Where this desk routes an order, so an answer that names a venue can be checked.
