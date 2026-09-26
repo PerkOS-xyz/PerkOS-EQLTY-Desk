@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quote Stock Token Route"
+  short_description: "Report the desk's executable Uniswap price, route and impact for a Stock Token buy."
+  default_prompt: "Quote a Stock Token buy at the requested USDG size through the desk and report the executable price, route, impact and protocols considered. Never build calldata, sign, deploy or submit anything."
