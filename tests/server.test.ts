@@ -71,8 +71,8 @@ describe("the desk over HTTP", () => {
     expect(res.status).toBe(200);
     const m = (await res.json()) as DeskManifest;
     expect(m.tagline).toBe("Tokenized stocks on Robinhood Chain");
-    expect(m.screens).toEqual(["market", "trader", "history"]);
-    expect(Object.keys(m.turns).sort()).toEqual(["advise", "analyze"]);
+    expect(m.screens).toEqual(["market", "trader", "history", "portfolio"]);
+    expect(Object.keys(m.turns).sort()).toEqual(["advise", "analyze", "launch"]);
     expect(m.starters.length).toBeLessThanOrEqual(6);
     expect(m.rules.length).toBeLessThanOrEqual(1600);
     for (const s of m.starters) expect(s.text.length <= 120 && s.tag.length <= 60).toBe(true);

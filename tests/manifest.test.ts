@@ -21,6 +21,8 @@ const STARTER_FIELDS = ["text", "tag", "turn"];
 const SCREENS = ["market", "portfolio", "history", "trader"];
 const TURN_KINDS = ["analyze", "advise", "order"];
 const ROLES = ["auditor", "risk", "scout", "trader"];
+/** Roles a turn may add for a client that knows them: Quote reads Uniswap's executable price. */
+const OPTIONAL_ROLES = ["quote"];
 
 describe("the desk's manifest", () => {
   it("keeps to the fields and limits the contract knows", () => {
@@ -33,13 +35,34 @@ describe("the desk's manifest", () => {
     expect(MANIFEST.screens.length).toBeLessThanOrEqual(6);
     for (const screen of MANIFEST.screens) expect(SCREENS).toContain(screen);
     for (const [kind, roles] of Object.entries(MANIFEST.turns)) {
+      if (kind === "launch") {
+        // A launch trades nothing: no Trader, and Hooks and Treasury take part.
+        expect(Object.keys(roles ?? {}).sort()).toEqual(["auditor", "hooks", "risk", "scout", "treasury"]);
+        continue;
+      }
       expect(TURN_KINDS).toContain(kind);
-      expect(Object.keys(roles ?? {}).sort()).toEqual(ROLES);
+      expect(Object.keys(roles ?? {}).filter((r) => !OPTIONAL_ROLES.includes(r)).sort()).toEqual(ROLES);
+      for (const prompt of Object.values(roles ?? {})) expect(prompt.length).toBeLessThanOrEqual(1200);
     }
   });
 
-  it("offers History next to the Market and the Trader", () => {
-    expect(MANIFEST.screens).toEqual(["market", "trader", "history"]);
+  it("asks Quote to read Uniswap's executable price in every trading turn it runs", () => {
+    for (const kind of ["analyze", "advise"] as const) expect(MANIFEST.turns[kind]?.quote).toMatch(/^As Quote: .*Uniswap now.*Open with "@Trader @Risk"/);
+  });
+
+  it("gives a drafted launch to Scout, Risk, Hooks, Treasury and the Auditor, with Risk's verdict and the person's hold", () => {
+    const launch = MANIFEST.turns.launch;
+    expect(launch?.risk).toContain('"VERDICT: GO" or "VERDICT: BLOCK"');
+    expect(launch?.hooks).toMatch(/^As Hooks: .*Uniswap v4 pool.*from the facts only/);
+    expect(launch?.treasury).toMatch(/^As Treasury: .*from the facts only/);
+    expect(launch?.auditor).toContain("never an address");
+    for (const prompt of Object.values(launch ?? {})) expect(prompt.length).toBeLessThanOrEqual(1200);
+    expect(MANIFEST.rules).toContain("the person holds to launch");
+    expect(MANIFEST.rules.length).toBeLessThanOrEqual(1600);
+  });
+
+  it("offers History and the Portfolio next to the Market and the Trader", () => {
+    expect(MANIFEST.screens).toEqual(["market", "trader", "history", "portfolio"]);
   });
 
   it("only routes a starter to a turn this desk runs", () => {
@@ -63,7 +86,7 @@ describe("the desk's manifest", () => {
     if (cap === undefined) return;
     expect(Number.isFinite(cap) && cap > 0 && cap <= 1_000_000).toBe(true);
     expect(MANIFEST.rules).toContain(`An order is at most ${cap} USDG.`);
-    for (const roles of Object.values(MANIFEST.turns)) expect(roles?.trader).toContain(`at most ${cap}`);
+    for (const kind of ["analyze", "advise"] as const) expect(MANIFEST.turns[kind]?.trader).toContain(`at most ${cap}`);
     const atomic = BigInt(cap) * 10n ** BigInt(USDG_DECIMALS);
     const defaults = loadTradingConfig({});
     expect(defaults.swapMaxAmount).toBe(atomic);

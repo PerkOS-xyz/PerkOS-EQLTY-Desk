@@ -76,6 +76,22 @@ export interface DeskRolePrompts {
   risk: string;
   trader: string;
   auditor: string;
+  /** The Uniswap quote specialist, asked with Scout and Risk. Only a client that knows the role reads it. */
+  quote?: string;
+}
+
+/**
+ * What each role does when the person drafts a token launch. The Trader has no
+ * part: a launch trades nothing. Only a client that knows launches reads it.
+ */
+export interface DeskLaunchPrompts {
+  scout: string;
+  risk: string;
+  auditor: string;
+  /** The Uniswap hooks specialist: the pool's hook, in plain words. */
+  hooks?: string;
+  /** The treasury specialist: who earns what from the launch. */
+  treasury?: string;
 }
 
 /** How the desk presents itself and how its team works a turn. */
@@ -86,7 +102,7 @@ export interface DeskManifest {
   /** What every member of the team keeps in every turn on this desk. */
   rules: string;
   /** A kind of turn left out is one this desk does not run. */
-  turns: Partial<Record<"analyze" | "advise" | "order", DeskRolePrompts>>;
+  turns: Partial<Record<"analyze" | "advise" | "order", DeskRolePrompts>> & { launch?: DeskLaunchPrompts };
   /** The most one order may spend, in the market's quote asset (USDG here). */
   maxOrder?: number;
   /**
