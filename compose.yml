@@ -9,6 +9,15 @@ services:
     restart: unless-stopped
     environment:
       EQLTY_API_URL: ${EQLTY_API_URL:-https://eqlty-api.perkos.xyz}
+      # From an .env next to this file on the host, never committed. An empty
+      # value means the default in src/config.ts; with no key, /quote and /swap
+      # answer 503 and the rest of the desk keeps working.
+      UNISWAP_API_KEY: ${UNISWAP_API_KEY:-}
+      UNISWAP_API_URL: ${UNISWAP_API_URL:-}
+      UNISWAP_QUOTE_SWAPPER: ${UNISWAP_QUOTE_SWAPPER:-}
+      ROBINHOOD_RPC_URL: ${ROBINHOOD_RPC_URL:-}
+      EQLTY_AGENT_SWAP_MAX_AMOUNT: ${EQLTY_AGENT_SWAP_MAX_AMOUNT:-}
+      EQLTY_AGENT_QUOTE_MAX_AMOUNT: ${EQLTY_AGENT_QUOTE_MAX_AMOUNT:-}
       PORT: "8090"
     networks:
       - shared
