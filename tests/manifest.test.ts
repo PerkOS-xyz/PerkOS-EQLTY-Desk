@@ -45,8 +45,8 @@ describe("the desk's manifest", () => {
     for (const roles of Object.values(MANIFEST.turns)) expect(roles?.quote).toMatch(/^As Quote: .*Uniswap now.*Open with "@Trader @Risk"/);
   });
 
-  it("offers History next to the Market and the Trader", () => {
-    expect(MANIFEST.screens).toEqual(["market", "trader", "history"]);
+  it("offers History and the Portfolio next to the Market and the Trader", () => {
+    expect(MANIFEST.screens).toEqual(["market", "trader", "history", "portfolio"]);
   });
 
   it("only routes a starter to a turn this desk runs", () => {
