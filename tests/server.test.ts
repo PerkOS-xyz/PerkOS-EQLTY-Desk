@@ -81,4 +81,17 @@ describe("the desk over HTTP", () => {
     }
     expect(m.rules).toContain("USDG");
   });
+
+  it("says which turn each starter runs, its order ceiling and its venues", async () => {
+    const res = await createApp(stub()).request("/manifest");
+    const m = (await res.json()) as DeskManifest;
+    expect(m.starters.map((s) => [s.text, s.turn ?? null])).toEqual([
+      ["What should I buy this month?", "advise"],
+      ["How is NVDA doing today?", "analyze"],
+      ["What can I trade on this desk?", null],
+      ["Is Apple cheaper than Microsoft right now?", "analyze"],
+    ]);
+    expect(m.maxOrder).toBe(100);
+    expect(m.venues).toEqual(["Uniswap on Robinhood Chain"]);
+  });
 });

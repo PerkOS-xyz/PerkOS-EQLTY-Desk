@@ -56,10 +56,18 @@ export interface DeskSeries {
   line?: string;
 }
 
+/** The kinds of turn a desk can run. */
+export type DeskTurnKind = "analyze" | "advise" | "order";
+
 export interface DeskStarter {
   text: string;
   /** A few words under the question: what the desk will do with it. */
   tag: string;
+  /**
+   * The turn this question runs when it is tapped. Left out, the question is
+   * plain chat: Sparky answers alone and the team is not woken.
+   */
+  turn?: DeskTurnKind;
 }
 
 /** What each role does in one kind of turn. */
@@ -79,4 +87,11 @@ export interface DeskManifest {
   rules: string;
   /** A kind of turn left out is one this desk does not run. */
   turns: Partial<Record<"analyze" | "advise" | "order", DeskRolePrompts>>;
+  /** The most one order may spend, in the market's quote asset (USDG here). */
+  maxOrder?: number;
+  /**
+   * Where the desk trades, named as the team should name it (1 to 8 names).
+   * An answer that names another venue is flagged.
+   */
+  venues?: string[];
 }
