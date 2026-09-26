@@ -21,7 +21,7 @@ export const MANIFEST: DeskManifest = {
     { text: "What can I trade on this desk?", tag: "Tokenized stocks in USDG" },
     { text: "Is Apple cheaper than Microsoft right now?", tag: "Compare two stocks" },
   ],
-  screens: ["market", "trader"],
+  screens: ["market", "trader", "history"],
   rules: [
     "This desk trades tokenized stocks on Robinhood Chain, priced in USDG.",
     "They trade 24/7 onchain; only the reference price pauses outside US market hours, so never say the market is closed: say the reference is frozen and compare with the last close.",
