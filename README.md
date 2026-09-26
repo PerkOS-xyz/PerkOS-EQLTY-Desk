@@ -19,6 +19,8 @@ Live on 27 Sep 2026: the market, Uniswap quotes, the seven-agent team and its se
 | **Bankr** | The launch turn drafts a token paired with a stock on Robinhood Chain through the Bankr Token Launch API, with its own Uniswap v4 pool, simulated before the owner holds to launch. | Desk [`manifest.ts` L67-L78](https://github.com/PerkOS-xyz/PerkOS-EQLTY-Desk/blob/d19287037efb833b3c47cfa3c97ee3dab42d76ce/src/manifest.ts#L67-L78) (launch turn) · Runtime [`bankrLaunch.ts` L18-L24](https://github.com/PerkOS-xyz/PerkOS-Runtime/blob/752d1feb9b5d0332ea2026f5b09dfd7ab8289812/apps/web/app/lib/bankrLaunch.ts#L18-L24) | The launch goes out from the owner's own Bankr wallet; nobody on the desk launches it |
 | **Robinhood Chain** | Every token the desk lists is a Robinhood Chain Stock Token priced in USDG, and every order spends USDG. | Desk [`config.ts` L16-L25](https://github.com/PerkOS-xyz/PerkOS-EQLTY-Desk/blob/d19287037efb833b3c47cfa3c97ee3dab42d76ce/src/config.ts#L16-L25), [`market.ts`](https://github.com/PerkOS-xyz/PerkOS-EQLTY-Desk/blob/d19287037efb833b3c47cfa3c97ee3dab42d76ce/src/market.ts) | The contracts below |
 
+Our feedback to Uniswap from this build is in [FEEDBACK.md](FEEDBACK.md).
+
 ### Contracts on Robinhood Chain (chain 4663)
 
 The desk deploys no contracts of its own. Its orders go through these, and the Dynamic signer rule allows only them and the Stock Tokens:
