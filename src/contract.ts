@@ -76,6 +76,8 @@ export interface DeskRolePrompts {
   risk: string;
   trader: string;
   auditor: string;
+  /** The Uniswap quote specialist, asked with Scout and Risk. Only a client that knows the role reads it. */
+  quote?: string;
 }
 
 /** How the desk presents itself and how its team works a turn. */

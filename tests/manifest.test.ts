@@ -21,6 +21,8 @@ const STARTER_FIELDS = ["text", "tag", "turn"];
 const SCREENS = ["market", "portfolio", "history", "trader"];
 const TURN_KINDS = ["analyze", "advise", "order"];
 const ROLES = ["auditor", "risk", "scout", "trader"];
+/** Roles a turn may add for a client that knows them: Quote reads Uniswap's executable price. */
+const OPTIONAL_ROLES = ["quote"];
 
 describe("the desk's manifest", () => {
   it("keeps to the fields and limits the contract knows", () => {
@@ -34,8 +36,13 @@ describe("the desk's manifest", () => {
     for (const screen of MANIFEST.screens) expect(SCREENS).toContain(screen);
     for (const [kind, roles] of Object.entries(MANIFEST.turns)) {
       expect(TURN_KINDS).toContain(kind);
-      expect(Object.keys(roles ?? {}).sort()).toEqual(ROLES);
+      expect(Object.keys(roles ?? {}).filter((r) => !OPTIONAL_ROLES.includes(r)).sort()).toEqual(ROLES);
+      for (const prompt of Object.values(roles ?? {})) expect(prompt.length).toBeLessThanOrEqual(1200);
     }
+  });
+
+  it("asks Quote to read Uniswap's executable price in every kind of turn it runs", () => {
+    for (const roles of Object.values(MANIFEST.turns)) expect(roles?.quote).toMatch(/^As Quote: .*Uniswap now.*Open with "@Trader @Risk"/);
   });
 
   it("offers History next to the Market and the Trader", () => {

@@ -48,6 +48,8 @@ export const MANIFEST: DeskManifest = {
         'As Trader (open with "@Sparky"): if the person wanted exposure to this stock, give the entry plan: size in USDG (at most 100), a take profit level, and a stop or a time exit; or say why you would wait and for what. You never execute. Under 60 words.',
       auditor:
         'As Auditor (open with "@Sparky"): write the analysis record: the thesis in one line, the evidence that supports it with its tags like [F2], the main risk, and what to check next. Under 80 words.',
+      quote:
+        'As Quote: read Uniswap\'s executable price for this stock in the facts (the "Uniswap now" line) and tell the desk what an order of that size really gets: the price each against the market price, the price impact and the route. If the facts have no Uniswap line, say the desk has no quote yet. Tag each claim like [F4]. Open with "@Trader @Risk". Under 50 words, plain text.',
     },
     advise: {
       scout:
@@ -58,6 +60,8 @@ export const MANIFEST: DeskManifest = {
         'As Trader (open with "@Sparky"): the entry plan for the top pick the desk converges on: size in USDG (at most 100), take profit level, stop or time exit, and when you would add the second pick. You never execute. Under 70 words.',
       auditor:
         'As Auditor (open with "@Sparky"): write the dated outlook record: the picks with their reasons and tags like [F2], the one to avoid, the risk rules, and the review date one month out. Under 100 words.',
+      quote:
+        'As Quote: for each candidate with a "Uniswap now" line in the facts, say what the size really buys on Uniswap and which one fills best: the price each against the market price, the price impact and the route. Name a candidate the facts do not quote as not quoted. Tag each claim like [F4]. Open with "@Trader @Risk". Under 70 words, plain text.',
     },
   },
 };
