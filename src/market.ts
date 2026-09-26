@@ -13,6 +13,7 @@
  *     never quietly hidden, so a person can see it exists and why it is off.
  */
 
+import type { TokenActivity } from "./activity.ts";
 import type { DeskAsset, DeskMarket, DeskSeries } from "./contract.ts";
 
 const ROBINHOOD_CHAIN_ID = 4663;
@@ -22,6 +23,8 @@ export interface MarketSource {
   /** Where the EQLTY API lives. */
   baseUrl: string;
   fetchImpl?: typeof fetch;
+  /** Where the 24h change and volume come from when the catalogue has none. */
+  activity?: { forAddresses(addresses: string[]): Promise<Map<string, TokenActivity>> } | null;
 }
 
 export class DeskUnavailableError extends Error {
@@ -37,10 +40,12 @@ const num = (v: unknown): number | null => (typeof v === "number" && Number.isFi
 export class EqltyMarket {
   private readonly baseUrl: string;
   private readonly http: typeof fetch;
+  private readonly activity: MarketSource["activity"];
 
   constructor(source: MarketSource) {
     this.baseUrl = source.baseUrl.replace(/\/+$/, "");
     this.http = source.fetchImpl ?? fetch;
+    this.activity = source.activity ?? null;
   }
 
   private async read(path: string): Promise<unknown> {
@@ -67,7 +72,7 @@ export class EqltyMarket {
       assets?: unknown;
     };
     const rows = Array.isArray(body.assets) ? (body.assets as Array<Record<string, unknown>>) : [];
-    const assets = rows.map(toAsset).filter((a): a is DeskAsset => a !== null);
+    const assets = await this.withActivity(rows.map(toAsset).filter((a): a is DeskAsset => a !== null));
     if (!assets.length) throw new DeskUnavailableError("The EQLTY market returned no assets");
     const quote = body.quoteToken;
     return {
@@ -78,6 +83,18 @@ export class EqltyMarket {
       assets,
       observedAt: str(body.observedAt) ?? new Date().toISOString(),
     };
+  }
+
+  /** Fills the 24h change and volume the catalogue left empty, from the tokens' own pools. */
+  private async withActivity(assets: DeskAsset[]): Promise<DeskAsset[]> {
+    const missing = assets.filter((a) => a.change24hPct === null || a.volume24hUsd === null);
+    if (!this.activity || !missing.length) return assets;
+    const found = await this.activity.forAddresses(missing.map((a) => a.address)).catch(() => new Map<string, TokenActivity>());
+    return assets.map((a) => {
+      const hit = found.get(a.address.toLowerCase());
+      if (!hit) return a;
+      return { ...a, change24hPct: a.change24hPct ?? hit.change24hPct, volume24hUsd: a.volume24hUsd ?? hit.volume24hUsd };
+    });
   }
 
   async series(tickers: string[]): Promise<DeskSeries[]> {
