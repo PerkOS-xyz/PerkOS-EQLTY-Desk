@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
-    "hono": "^4.6.14"
+    "hono": "^4.6.14",
+    "viem": "^2.56.9"
   },
   "devDependencies": {
+    "@types/node": "^22.20.4",
     "typescript": "^5.9.2",
     "vitest": "^2.1.9"
   }
