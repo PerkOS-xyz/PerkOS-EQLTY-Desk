@@ -2,9 +2,9 @@
  * The desk, over HTTP.
  *
  * PerkOS asks this service for the desk's market and proxies the answer to
- * whoever is drawing it, so the two questions it answers are the two a Desk
- * owes: what can be traded, and what it was worth. Reads only. Nothing here
- * can spend, sign, or reach a person's wallet.
+ * whoever is drawing it: what can be traded, what it was worth, and how the
+ * desk presents itself and runs its team. Reads only. Nothing here can spend,
+ * sign, or reach a person's wallet.
  *
  * When the market underneath is down it answers 503 and says so, because a
  * desk that returns an empty list looks like a market with nothing in it.
@@ -14,6 +14,7 @@ import { serve } from "@hono/node-server";
 import { Hono, type Context } from "hono";
 
 import { DESK_CONTRACT_VERSION } from "./contract.ts";
+import { MANIFEST } from "./manifest.ts";
 import { DeskUnavailableError, EqltyMarket } from "./market.ts";
 
 const EQLTY_API_URL = process.env.EQLTY_API_URL?.trim() || "https://eqlty-api.perkos.xyz";
@@ -23,6 +24,8 @@ export function createApp(market = new EqltyMarket({ baseUrl: EQLTY_API_URL })):
   const app = new Hono();
 
   app.get("/health", (c) => c.json({ ok: true, desk: "eqlty", contract: DESK_CONTRACT_VERSION }));
+
+  app.get("/manifest", (c) => c.json(MANIFEST));
 
   app.get("/market", async (c) => {
     try {
