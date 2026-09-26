@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Fee Split"
+  short_description: "Turn a fee-sharing intent into a Robinhood Chain launch split."
+  default_prompt: "Turn this fee-sharing intent into an auction share, FeeSplitter shares and recipients, explained in money, without deploying anything."
