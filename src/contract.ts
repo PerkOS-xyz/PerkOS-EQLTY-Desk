@@ -55,3 +55,28 @@ export interface DeskSeries {
   changePct?: number;
   line?: string;
 }
+
+export interface DeskStarter {
+  text: string;
+  /** A few words under the question: what the desk will do with it. */
+  tag: string;
+}
+
+/** What each role does in one kind of turn. */
+export interface DeskRolePrompts {
+  scout: string;
+  risk: string;
+  trader: string;
+  auditor: string;
+}
+
+/** How the desk presents itself and how its team works a turn. */
+export interface DeskManifest {
+  tagline: string;
+  starters: DeskStarter[];
+  screens: Array<"market" | "portfolio" | "history">;
+  /** What every member of the team keeps in every turn on this desk. */
+  rules: string;
+  /** A kind of turn left out is one this desk does not run. */
+  turns: Partial<Record<"analyze" | "advise" | "order", DeskRolePrompts>>;
+}

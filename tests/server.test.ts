@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { createApp } from "../src/server.ts";
 import { DeskUnavailableError } from "../src/market.ts";
-import type { DeskMarket, DeskSeries } from "../src/contract.ts";
+import type { DeskManifest, DeskMarket, DeskSeries } from "../src/contract.ts";
 
 const market: DeskMarket = {
   chain: "robinhood",
@@ -64,5 +64,21 @@ describe("the desk over HTTP", () => {
     const res = await createApp(down).request("/market");
     expect(res.status).toBe(503);
     expect(await res.json()).toMatchObject({ error: "desk_unavailable", message: "The EQLTY market answered 503" });
+  });
+
+  it("describes itself and how its team works a turn, within the contract's limits", async () => {
+    const res = await createApp(stub()).request("/manifest");
+    expect(res.status).toBe(200);
+    const m = (await res.json()) as DeskManifest;
+    expect(m.tagline).toBe("Tokenized stocks on Robinhood Chain");
+    expect(m.screens).toEqual(["market"]);
+    expect(Object.keys(m.turns).sort()).toEqual(["advise", "analyze"]);
+    expect(m.starters.length).toBeLessThanOrEqual(6);
+    expect(m.rules.length).toBeLessThanOrEqual(1600);
+    for (const s of m.starters) expect(s.text.length <= 120 && s.tag.length <= 60).toBe(true);
+    for (const roles of Object.values(m.turns)) {
+      for (const prompt of Object.values(roles ?? {})) expect(prompt.length).toBeLessThanOrEqual(1200);
+    }
+    expect(m.rules).toContain("USDG");
   });
 });
