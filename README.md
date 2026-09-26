@@ -52,3 +52,7 @@ npm start
 ## License
 
 MIT.
+
+## Public ENS identity descriptor
+
+`GET /identity` declares all seven roles: Scout, Risk, Trader, Auditor, Hooks, Quote and Treasury. Six declare their public evidence key; Trader is read-only for ENS. The descriptor carries no addresses, signing keys or chain configuration. PerkOS-API matches it to the complete published/instantiated fleet and provisions identities; Runtime independently verifies Sepolia. Trading and the existing manifest remain compatible. Public-chain activation requires the corresponding Runtime/API release and configured parent/operator wallet.

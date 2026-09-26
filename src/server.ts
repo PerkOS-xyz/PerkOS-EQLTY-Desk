@@ -19,6 +19,7 @@ import { Hono, type Context } from "hono";
 import { loadTradingConfig } from "./config.ts";
 import { DESK_CONTRACT_VERSION } from "./contract.ts";
 import { MANIFEST } from "./manifest.ts";
+import { IDENTITY } from "./identity.ts";
 import { activityFromEnv } from "./activity.ts";
 import { DeskUnavailableError, EqltyMarket } from "./market.ts";
 import { createTrading, tradeRoutes, type Trading } from "./trade-routes.ts";
@@ -35,6 +36,8 @@ export function createApp(
   app.get("/health", (c) => c.json({ ok: true, desk: "eqlty", contract: DESK_CONTRACT_VERSION }));
 
   app.get("/manifest", (c) => c.json(MANIFEST));
+
+  app.get("/identity", (c) => c.json(IDENTITY));
 
   app.get("/market", async (c) => {
     try {
