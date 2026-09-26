@@ -19,6 +19,7 @@ import { Hono, type Context } from "hono";
 import { loadTradingConfig } from "./config.ts";
 import { DESK_CONTRACT_VERSION } from "./contract.ts";
 import { MANIFEST } from "./manifest.ts";
+import { activityFromEnv } from "./activity.ts";
 import { DeskUnavailableError, EqltyMarket } from "./market.ts";
 import { createTrading, tradeRoutes, type Trading } from "./trade-routes.ts";
 
@@ -26,7 +27,7 @@ const EQLTY_API_URL = process.env.EQLTY_API_URL?.trim() || "https://eqlty-api.pe
 const PORT = Number(process.env.PORT ?? 8090);
 
 export function createApp(
-  market = new EqltyMarket({ baseUrl: EQLTY_API_URL }),
+  market = new EqltyMarket({ baseUrl: EQLTY_API_URL, activity: activityFromEnv() }),
   trading: Trading = createTrading(market, loadTradingConfig()),
 ): Hono {
   const app = new Hono();

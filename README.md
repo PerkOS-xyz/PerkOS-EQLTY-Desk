@@ -31,6 +31,10 @@ Their tests use Node's own test runner:
 npm run test:skills
 ```
 
+## Market activity
+
+The catalogue prices every token but reports no 24h change or volume. The desk fills both from each token's deepest pool on Robinhood Chain (a public pair index, 30 tokens per request, cached two minutes). A slow or failed read leaves them `null` and never holds `/market` up. `DESK_ACTIVITY=off` turns it off; `DESK_ACTIVITY_URL` points it elsewhere.
+
 ## Development
 
 Node 22.
